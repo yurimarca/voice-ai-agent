@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useWebRTC } from '../hooks/useWebRTC';
 import CostDisplay from './CostDisplay';
-import './VoiceAgent.css';
 
 const WS_URL = 'ws://localhost:3001/ws';
 
@@ -347,18 +346,32 @@ function VoiceAgent({ systemPrompt, voice = 'alloy' }) {
   }, [stopRecording, clearAudioQueue]);
 
   return (
-    <div className="voice-agent">
-      <div className="agent-controls">
-        <div className="status-indicators">
-          <div className={`status-badge ${connectionStatus}`}>
-            <span className="status-dot"></span>
+    <div className="flex flex-col gap-6">
+      <div className="bg-surface border border-border rounded-xl p-6 shadow-custom flex flex-col items-center gap-4">
+        <div className="flex gap-4 flex-wrap justify-center w-full">
+          <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-background border ${
+            connectionStatus === 'connected' ? 'bg-success/10 border-success text-success' :
+            connectionStatus === 'connecting' ? 'bg-primary/10 border-primary text-primary' :
+            connectionStatus === 'error' ? 'bg-danger/10 border-danger text-danger' :
+            'bg-danger/10 border-danger text-danger'
+          }`}>
+            <span className={`w-2 h-2 rounded-full animate-pulse-slow ${
+              connectionStatus === 'connected' ? 'bg-success' :
+              connectionStatus === 'connecting' ? 'bg-primary' :
+              'bg-danger'
+            }`}></span>
             {connectionStatus === 'connected' ? 'Connected' : 
              connectionStatus === 'connecting' ? 'Connecting...' :
              connectionStatus === 'error' ? 'Connection Error' : 'Disconnected'}
           </div>
           
           {isRecording && (
-            <div className={`agent-state ${agentStatus}`}>
+            <div className={`px-4 py-2 rounded-full text-sm font-medium bg-background border ${
+              agentStatus === 'listening' ? 'bg-primary/10 border-primary text-primary' :
+              agentStatus === 'thinking' ? 'bg-yellow-500/10 border-yellow-500 text-yellow-700' :
+              agentStatus === 'speaking' ? 'bg-success/10 border-success text-success' :
+              'bg-gray-100 border-border text-text-primary'
+            }`}>
               {agentStatus === 'listening' && '🎤 Listening'}
               {agentStatus === 'thinking' && '💭 Thinking'}
               {agentStatus === 'speaking' && '🔊 Speaking'}
@@ -368,25 +381,31 @@ function VoiceAgent({ systemPrompt, voice = 'alloy' }) {
         </div>
 
         <button
-          className={`main-control-btn ${isRecording ? 'recording' : ''}`}
+          className={`flex items-center justify-center gap-3 px-10 py-4 text-lg font-semibold rounded-full text-white transition-all duration-300 min-w-[250px] md:min-w-auto md:w-full ${
+            isRecording
+              ? 'bg-danger hover:bg-danger/90 animate-recording-pulse'
+              : connectionStatus === 'connecting'
+              ? 'bg-secondary cursor-not-allowed'
+              : 'bg-success hover:bg-success/90 hover:-translate-y-0.5 hover:shadow-custom-lg'
+          }`}
           onClick={isRecording ? stopConversation : startConversation}
           disabled={connectionStatus === 'connecting'}
         >
           {isRecording ? (
             <>
-              <span className="btn-icon">⏹</span>
+              <span className="text-xl">⏹</span>
               Stop Conversation
             </>
           ) : (
             <>
-              <span className="btn-icon">▶</span>
+              <span className="text-xl">▶</span>
               Start Conversation
             </>
           )}
         </button>
 
         {audioError && (
-          <div className="error-message">
+          <div className="px-3 py-3 bg-danger/10 text-danger rounded-lg border border-danger text-sm text-center">
             <strong>Error:</strong> {audioError}
           </div>
         )}
@@ -394,12 +413,12 @@ function VoiceAgent({ systemPrompt, voice = 'alloy' }) {
 
       <CostDisplay cost={conversationCost} />
 
-      <div className="conversation-container">
-        <div className="conversation-header">
-          <h3>Conversation</h3>
+      <div className="bg-surface rounded-xl shadow-custom border border-border overflow-hidden flex flex-col max-h-[600px] md:max-h-[500px]">
+        <div className="px-6 py-4 bg-background border-b border-border flex justify-between items-center">
+          <h3 className="m-0 text-lg font-semibold text-text-primary">Conversation</h3>
           {conversationItems.length > 0 && (
             <button
-              className="clear-btn"
+              className="bg-transparent text-danger px-3.5 py-1.5 rounded-md text-sm font-medium transition-all duration-200 hover:bg-danger/10"
               onClick={() => {
                 setConversationItems([]);
                 setConversationCost({
@@ -415,36 +434,42 @@ function VoiceAgent({ systemPrompt, voice = 'alloy' }) {
           )}
         </div>
 
-        <div className="conversation-transcript">
+        <div className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-4">
           {conversationItems.length === 0 && !currentTranscript && (
-            <div className="empty-state">
-              <p>Click "Start Conversation" to begin talking with the AI voice agent.</p>
-              <p className="empty-state-hint">The AI will listen, process your speech, and respond with voice.</p>
+            <div className="text-center py-12 px-4 text-text-secondary">
+              <p className="mb-2">Click "Start Conversation" to begin talking with the AI voice agent.</p>
+              <p className="text-sm text-text-secondary">The AI will listen, process your speech, and respond with voice.</p>
             </div>
           )}
 
           {conversationItems.map((item, index) => (
-            <div key={index} className={`conversation-item ${item.role}`}>
-              <div className="item-header">
-                <span className="item-role">
+            <div key={index} className={`p-4 rounded-xl max-w-[80%] md:max-w-[90%] animate-slide-in ${
+              item.role === 'user'
+                ? 'self-end bg-primary/10 border border-primary'
+                : 'self-start bg-background border border-border'
+            }`}>
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-semibold text-sm text-text-primary">
                   {item.role === 'user' ? '👤 You' : '🤖 Assistant'}
                 </span>
-                <span className="item-time">
+                <span className="text-xs text-text-secondary">
                   {item.timestamp.toLocaleTimeString()}
                 </span>
               </div>
-              <div className="item-text">{item.text}</div>
+              <div className="text-text-primary leading-6 break-words">{item.text}</div>
             </div>
           ))}
 
           {currentTranscript && (
-            <div className={`conversation-item ${agentStatus === 'listening' ? 'user' : 'assistant'} current`}>
-              <div className="item-header">
-                <span className="item-role">
+            <div className={`p-4 rounded-xl max-w-[80%] md:max-w-[90%] opacity-80 animate-fade-in ${
+              agentStatus === 'listening' ? 'self-end bg-primary/10 border border-primary' : 'self-start bg-background border border-border'
+            }`}>
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-semibold text-sm text-text-primary">
                   {agentStatus === 'listening' || agentStatus === 'thinking' ? '👤 You' : '🤖 Assistant'}
                 </span>
               </div>
-              <div className="item-text">{currentTranscript}</div>
+              <div className="text-text-primary leading-6 break-words">{currentTranscript}</div>
             </div>
           )}
 

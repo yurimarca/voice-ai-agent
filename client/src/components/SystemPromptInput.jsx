@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import './SystemPromptInput.css';
 
 const EXAMPLE_PROMPTS = [
   {
@@ -54,12 +53,12 @@ function SystemPromptInput({ value, onChange, voice, onVoiceChange }) {
   };
 
   return (
-    <div className="system-prompt-input">
-      <div className="prompt-header">
-        <label htmlFor="system-prompt">Customize AI Behavior</label>
+    <div className="flex flex-col gap-4 mt-4">
+      <div className="flex justify-between items-center mb-2">
+        <label htmlFor="system-prompt" className="font-semibold text-base text-text-primary">Customize AI Behavior</label>
         <button
           type="button"
-          className="examples-btn"
+          className="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-primary-hover transition-colors"
           onClick={() => setShowExamples(!showExamples)}
         >
           {showExamples ? 'Hide' : 'Show'} Examples
@@ -67,16 +66,16 @@ function SystemPromptInput({ value, onChange, voice, onVoiceChange }) {
       </div>
 
       {showExamples && (
-        <div className="examples-list">
-          <p className="examples-title">Example Prompts:</p>
+        <div className="bg-background border border-border rounded-lg p-4 mb-2">
+          <p className="font-semibold mb-3 text-text-primary">Example Prompts:</p>
           {EXAMPLE_PROMPTS.map((example, index) => (
-            <div key={index} className="example-item">
-              <div className="example-content">
-                <strong>{example.name}</strong>
-                <p>{example.prompt}</p>
+            <div key={index} className="flex gap-4 items-start p-3 bg-white border border-border rounded-md mb-2 last:mb-0 transition-colors hover:border-primary">
+              <div className="flex-1">
+                <strong className="block mb-1 text-text-primary">{example.name}</strong>
+                <p className="text-sm text-text-secondary m-0">{example.prompt}</p>
               </div>
               <button
-                className="use-btn"
+                className="bg-secondary text-white px-3.5 py-1.5 rounded text-sm font-medium whitespace-nowrap hover:bg-slate-700 transition-colors"
                 onClick={() => handleUseExample(example.prompt)}
               >
                 Use
@@ -88,20 +87,20 @@ function SystemPromptInput({ value, onChange, voice, onVoiceChange }) {
 
       <textarea
         id="system-prompt"
-        className="prompt-textarea"
+        className="w-full px-3 py-3 border-2 border-border rounded-lg text-[15px] resize-y min-h-[100px] transition-colors focus:border-primary focus:outline-none"
         value={tempValue}
         onChange={(e) => setTempValue(e.target.value)}
         placeholder="Enter system prompt to guide the AI's behavior..."
         rows={4}
       />
 
-      <div className="voice-selector-section">
-        <label htmlFor="voice-select" className="voice-label">
+      <div className="flex flex-col gap-2">
+        <label htmlFor="voice-select" className="font-semibold text-[15px] text-text-primary flex items-center gap-2">
           🔊 Voice Selection
         </label>
         <select
           id="voice-select"
-          className="voice-select"
+          className="w-full px-3 py-3 border-2 border-border rounded-lg text-[15px] bg-white cursor-pointer transition-colors hover:border-primary focus:border-primary focus:outline-none"
           value={tempVoice}
           onChange={(e) => setTempVoice(e.target.value)}
         >
@@ -113,12 +112,12 @@ function SystemPromptInput({ value, onChange, voice, onVoiceChange }) {
         </select>
       </div>
 
-      <div className="prompt-actions">
-        <div className="prompt-info">
-          <span className="char-count">{tempValue.length} characters</span>
+      <div className="flex justify-between items-center md:flex-col md:gap-3 md:items-stretch">
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-text-secondary">{tempValue.length} characters</span>
         </div>
         <button
-          className="save-btn"
+          className="bg-success text-white px-6 py-2.5 rounded-md font-semibold text-[15px] transition-all duration-200 hover:bg-emerald-600 hover:-translate-y-px disabled:bg-secondary disabled:cursor-not-allowed md:w-full"
           onClick={handleSave}
           disabled={tempValue === value && tempVoice === voice}
         >
