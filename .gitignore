@@ -3,6 +3,8 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+.python-version
+
 # C extensions
 *.so
 
@@ -25,6 +27,12 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Node dependencies
+*/node_modules
+*/.pnp
+*.pnp.js
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

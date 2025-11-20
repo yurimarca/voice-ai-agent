@@ -1,0 +1,118 @@
+.browser-check-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.browser-check-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+.browser-check-icon {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.browser-check-modal h2 {
+  margin: 0 0 1rem 0;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.browser-check-modal p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.browser-check-errors {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--danger-color);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  list-style-position: inside;
+}
+
+.browser-check-errors li {
+  color: var(--danger-color);
+  margin-bottom: 0.5rem;
+}
+
+.browser-check-errors li:last-child {
+  margin-bottom: 0;
+}
+
+.browser-check-recommendation {
+  font-weight: 600;
+  margin-top: 1.5rem;
+}
+
+.browser-check-list {
+  list-style-position: inside;
+  margin: 0.5rem 0 1.5rem 0;
+  color: var(--text-secondary);
+}
+
+.browser-check-list li {
+  margin-bottom: 0.25rem;
+}
+
+.browser-check-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.browser-check-btn {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.browser-check-btn.primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.browser-check-btn.primary:hover {
+  background: var(--primary-hover);
+}
+
+.browser-check-btn.secondary {
+  background: var(--background);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.browser-check-btn.secondary:hover {
+  background: var(--surface);
+}
+
+@media (max-width: 768px) {
+  .browser-check-modal {
+    padding: 1.5rem;
+  }
+
+  .browser-check-actions {
+    flex-direction: column;
+  }
+}
+
