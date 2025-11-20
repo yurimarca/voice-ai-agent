@@ -242,9 +242,17 @@ function VoiceAgent({ systemPrompt, voice = 'alloy' }) {
       cachedTokens: 0
     });
 
-    if (!isConnected) {
-      connectWebSocket();
+    // Always establish a fresh WebSocket connection for new conversations
+    // Close existing connection if any
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = null;
+      setIsConnected(false);
+      setConnectionStatus('disconnected');
     }
+
+    // Establish new connection
+    connectWebSocket();
 
     // Wait for both WebSocket and OpenAI connection to be ready
     const maxWaitTime = 5000; // 5 seconds max
@@ -299,12 +307,20 @@ function VoiceAgent({ systemPrompt, voice = 'alloy' }) {
     setAgentStatus('idle');
     setCurrentTranscript('');
 
-    // Send disconnect signal to server to close OpenAI session
+    // Send disconnect signal to server to close OpenAI session, then close WebSocket
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       wsRef.current.send(JSON.stringify({
         type: 'session.disconnect'
       }));
       console.log('Sent session disconnect signal to server');
+      
+      // Close the WebSocket connection after sending disconnect signal
+      setTimeout(() => {
+        if (wsRef.current) {
+          wsRef.current.close();
+          console.log('Closed client WebSocket connection');
+        }
+      }, 100); // Small delay to ensure disconnect message is sent
     }
   };
 

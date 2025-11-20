@@ -14,6 +14,7 @@ Python FastAPI backend for the AI Voice Agent application with OpenAI Realtime A
 ## Installation
 
 ### Prerequisites
+
 - Python 3.8 or higher
 - pip package manager
 - OpenAI API key with Realtime API access
@@ -21,20 +22,20 @@ Python FastAPI backend for the AI Voice Agent application with OpenAI Realtime A
 ### Setup
 
 1. **Install dependencies:**
+   
    ```bash
    pip install -r requirements.txt
    ```
 
 2. **Configure environment:**
+   
    ```bash
    # Create and configure .env file:
-   OPENAI_API_KEY=your_openai_api_key_here
-   PORT=3001
+   OPENAI_API_KEY=your_openai_api_key_here## Running the Server
    ```
 
-## Running the Server
-
 ### Development Mode
+
 ```bash
 # Option 1: Direct uvicorn
 uvicorn main:app --reload --host 0.0.0.0 --port 3001
@@ -47,6 +48,7 @@ python start.py
 ```
 
 ### Production Mode
+
 ```bash
 uvicorn main:app --host 0.0.0.0 --port 3001 --workers 1
 ```
@@ -54,11 +56,13 @@ uvicorn main:app --host 0.0.0.0 --port 3001 --workers 1
 ## API Endpoints
 
 ### HTTP Endpoints
+
 - `GET /health` - Health check endpoint
 - `GET /model-info` - OpenAI model configuration info
 - `GET /docs` - Interactive API documentation (FastAPI auto-generated)
 
 ### WebSocket Endpoint
+
 - `WS /ws` - Main WebSocket endpoint for client connections
 
 ## Architecture
@@ -78,18 +82,21 @@ uvicorn main:app --host 0.0.0.0 --port 3001 --workers 1
 ## Key Components
 
 ### `main.py`
+
 - FastAPI application setup
 - WebSocket endpoint implementation
 - Client connection management
 - HTTP route definitions
 
 ### `services/openai_relay.py`
+
 - OpenAI WebSocket client
 - Message routing and queueing
 - Connection management and reconnection logic
 - Cost tracking integration
 
 ### `models/`
+
 - `websocket.py` - WebSocket message type definitions
 - `cost.py` - Cost calculation and session tracking
 
@@ -104,6 +111,7 @@ uvicorn main:app --host 0.0.0.0 --port 3001 --workers 1
 ## Key Features
 
 ### Technical Advantages
+
 - **Modern async/await syntax** for clean concurrent programming
 - **Type safety** with Pydantic models for robust data validation
 - **Automatic API docs** at `/docs` endpoint for easy development
@@ -111,6 +119,7 @@ uvicorn main:app --host 0.0.0.0 --port 3001 --workers 1
 - **Enhanced error handling** with Python's exception system
 
 ### Compatibility
+
 - **WebSocket protocol** compatible with standard WebSocket clients
 - **Standard message formats** for easy integration
 - **Environment-based configuration** with .env file support
@@ -119,18 +128,22 @@ uvicorn main:app --host 0.0.0.0 --port 3001 --workers 1
 ## Development Notes
 
 ### Adding New Features
+
 1. Define message types in `models/websocket.py`
 2. Add business logic to appropriate service
 3. Update WebSocket handler in `main.py`
 4. FastAPI automatically updates `/docs` with new endpoints
 
 ### Cost Calculation
+
 Cost tracking is handled by the `SessionCostTracker` class:
+
 - Tracks incremental token usage to avoid double counting
 - Calculates costs based on OpenAI's token-based pricing
 - Sends real-time updates to client
 
 ### Connection Management
+
 - Automatic reconnection on connection loss
 - Message queueing during connection establishment
 - Proper cleanup on client disconnect
@@ -141,6 +154,7 @@ Cost tracking is handled by the `SessionCostTracker` class:
 ### Common Issues
 
 **Import Errors:**
+
 ```bash
 # Ensure you're in the correct directory
 cd server
@@ -149,11 +163,13 @@ pip install -r requirements.txt
 ```
 
 **WebSocket Connection Issues:**
+
 - Check that OpenAI API key is valid
 - Verify network connectivity
 - Check server logs for detailed error messages
 
 **Port Conflicts:**
+
 - Ensure port 3001 is not in use by other applications
 - Change PORT in .env file if needed
 
